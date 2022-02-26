@@ -12,7 +12,7 @@ class LoginSchema(Schema):
     """
 
     email = fields.Email(required=True, validate=[Length(max=64)])
-    password = fields.Str(required=True, validate=[Length(min=8, max=128)])
+    password = fields.Str(validate=[Length(min=6, max=128)])
 
 
 class RegisterSchema(Schema):
@@ -43,4 +43,4 @@ class RegisterSchema(Schema):
             )
         ]
     )
-    password = fields.Str(required=True, validate=[Length(min=8, max=128)])
+    password = fields.Str(validate=[Length(min=6, max=128)])

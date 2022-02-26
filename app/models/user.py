@@ -17,13 +17,13 @@ class Permission:
 
 class Role(Model):
     __tablename__ = "roles"
-    id = Column(db.Integer, primary_key=True)
-    name = Column(db.String(64), unique=True)
-    default = Column(db.Boolean, default=False, index=True)
-    permissions = Column(db.Integer)
+    id = Column(db.Integer, primary_key=True, info='角色ID')
+    name = Column(db.String(64), unique=True, info='角色名称')
+    default = Column(db.Boolean, default=False, index=True, info='name==User时为True')
+    permissions = Column(db.Integer, unique=True, info='角色权限')
     description = Column(db.String(50))
-
-    users = db.relationship("User", backref="role", lazy="dynamic")
+    create_time = Column(db.DateTime, default=datetime.utcnow, info='创建时间')
+    update_time = Column(db.DateTime, default=datetime.utcnow, info='更新时间')
 
     def __init__(self, **kwargs):
         super(Role, self).__init__(**kwargs)
@@ -57,6 +57,12 @@ class Role(Model):
             role = Role.query.filter_by(name=r).first()
             if role is None:
                 role = Role(name=r)
+            role.reset_permission()
+            for perm in roles[r]:
+                role.add_permission(perm)
+            role.default = (role.name == default_role)
+            db.session.add(role)
+        db.session.commit()
 
     def has_permission(self, perm):
         return self.permissions & perm == perm
@@ -76,14 +82,14 @@ class Role(Model):
 class User(Model):
     """ User model for storing user related data """
 
-    id = Column(db.Integer, primary_key=True)
-    email = Column(db.String(64), unique=True, index=True)
-    username = Column(db.String(15), unique=True, index=True)
-    name = Column(db.String(64))
-    password_hash = Column(db.String(128))
-
-    joined_date = Column(db.DateTime, default=datetime.utcnow)
-    role_id = Column(db.Integer, db.ForeignKey("roles.id"))
+    id = Column(db.Integer, primary_key=True, unique=True, info='用户ID')
+    email = Column(db.String(64), unique=True, index=True, info='邮箱')
+    username = Column(db.String(15), unique=True, index=True, info='用户名')
+    name = Column(db.String(64), info='姓名')
+    password_hash = Column(db.String(128), info='密码')
+    role_id = Column(db.Integer, info='角色ID')
+    create_time = db.Column(db.DateTime, default=datetime.utcnow, info='创建时间')
+    update_time = db.Column(db.DateTime, default=datetime.utcnow, info='更新时间')
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)

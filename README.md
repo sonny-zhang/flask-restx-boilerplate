@@ -114,3 +114,12 @@ $ flask test
 # Run specific unit test(s)
 $ flask test tests.test_auth_api tests.test_user_model ...
 ```
+
+## 将数据库表结构转成model.py文件
+```mysql
+-- 每张表都应该有这两个时间，代码就不用处理了
+`create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP comment '创建时间',
+`update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '更新时间',
+
+flask-sqlacodegen 'sqlite:///data-dev.sqlite' --tables user --outfile "app/models/user2.py"  --flask
+```

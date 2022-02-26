@@ -6,9 +6,7 @@ from .controller import api as auth_ns
 
 auth_bp = Blueprint("auth", __name__)
 
-auth = Api(
-    auth_bp, title="G-Authenticate", description="Authenticate and receive tokens."
-)
+auth = Api(auth_bp, title="全局认证")
 
 # API namespaces
 auth.add_namespace(auth_ns)

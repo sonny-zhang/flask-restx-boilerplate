@@ -14,13 +14,16 @@ class Config:
     ## Set the token to expire every week
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(days=7)
 
+    # sql
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    JSON_AS_ASCII = False
+
 
 class DevelopmentConfig(Config):
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = os.environ.get(
         "DATABASE_URL", "sqlite:///" + os.path.join(basedir, "data-dev.sqlite")
     )
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     # Add logger
 
@@ -31,7 +34,6 @@ class TestingConfig(Config):
     # In-memory SQLite for testing
     SQLALCHEMY_DATABASE_URI = "sqlite:///:memory:"
     PRESERVE_CONTEXT_ON_EXCEPTION = False
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 
 class ProductionConfig(Config):
@@ -39,7 +41,6 @@ class ProductionConfig(Config):
     SQLALCHEMY_DATABASE_URI = os.environ.get(
         "DATABASE_URL", "sqlite:///" + os.path.join(basedir, "data.sqlite")
     )
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 
 config_by_name = dict(

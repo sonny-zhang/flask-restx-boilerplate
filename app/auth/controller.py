@@ -18,29 +18,29 @@ register_schema = RegisterSchema()
 @api.route("/login")
 class AuthLogin(Resource):
     """ User login endpoint
-    User registers then receives the user's information and access_token
+    用户登录后得到用户的信息和token
     """
 
     auth_login = AuthDto.auth_login
 
     @api.doc(
-        "Auth login",
+        "认证登录",
         responses={
-            200: ("Logged in", auth_success),
-            400: "Validations failed.",
-            403: "Incorrect password or incomplete credentials.",
-            404: "Email does not match any account.",
+            200: ("登录成功", auth_success),
+            400: "请求参数，验证失败",
+            403: "密码不正确或凭据不完整",
+            404: "根据邮箱没有找到用户",
         },
     )
     @api.expect(auth_login, validate=True)
     def post(self):
-        """ Login using email and password """
+        """ 密码登录 """
         # Grab the json data
         login_data = request.get_json()
 
         # Validate data
         if (errors := login_schema.validate(login_data)) :
-            return validation_error(False, errors), 400
+            return validation_error(400, errors), 400
 
         return AuthService.login(login_data)
 
@@ -48,7 +48,7 @@ class AuthLogin(Resource):
 @api.route("/register")
 class AuthRegister(Resource):
     """ User register endpoint
-    User registers then receives the user's information and access_token
+    用户注册后得到用户的信息和token
     """
 
     auth_register = AuthDto.auth_register
@@ -56,18 +56,18 @@ class AuthRegister(Resource):
     @api.doc(
         "Auth registration",
         responses={
-            201: ("Successfully registered user.", auth_success),
-            400: "Malformed data or validations failed.",
+            200: ("用户注册成功", auth_success),
+            400: "数据验证失败",
         },
     )
     @api.expect(auth_register, validate=True)
     def post(self):
-        """ User registration """
+        """ 注册用户 """
         # Grab the json data
         register_data = request.get_json()
 
         # Validate data
         if (errors := register_schema.validate(register_data)) :
-            return validation_error(False, errors), 400
+            return validation_error(400, errors), 400
 
         return AuthService.register(register_data)
