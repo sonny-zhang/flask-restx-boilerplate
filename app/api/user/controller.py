@@ -9,21 +9,21 @@ data_resp = UserDto.data_resp
 
 
 # TODO 待完成
-@api.route('/')
-class UserList(Resource):
-    @api.doc(
-        responses={
-            200: ("请求成功", data_resp),
-            400: "请求失败",
-        },
-    )
-    def get(self):
-        """获取用户列表"""
-        pass
-
-    def post(self):
-        """批量创建用户"""
-        pass
+# @api.route('/')
+# class UserList(Resource):
+#     @api.doc(
+#         responses={
+#             200: ("请求成功", data_resp),
+#             400: "请求失败",
+#         },
+#     )
+#     def get(self):
+#         """获取用户列表"""
+#         pass
+#
+#     def post(self):
+#         """批量创建用户"""
+#         pass
 
 
 @api.route("/<string:username>")

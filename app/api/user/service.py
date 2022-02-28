@@ -1,6 +1,5 @@
 from flask import current_app
 
-# from app.utils import err_resp, ok_message, err_500_resp
 from app.models.user import User
 from libs import resp
 

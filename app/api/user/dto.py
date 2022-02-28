@@ -30,7 +30,7 @@ class UserDto:
             "code": fields.Integer(example=200),
             "message": fields.String(example='success'),
             "data": fields.Nested(user_obj),
-            "pagination": fields
+            "pagination": fields.Nested(pagination_obj)
         },
     )
 
