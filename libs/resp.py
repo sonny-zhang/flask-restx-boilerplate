@@ -6,14 +6,15 @@ from flask_restx._http import HTTPStatus as http_status
 
 
 class Resp(object):
-    def __init__(self, code: int, msg1: str, status_code: int):
+    def __init__(self, code: int, msg_temp: str, status_code: int):
+        #: set_msg会更改msg，需要用一个变量暂时存储
         self.code = code
-        self.msg1 = msg1
+        self.msg_temp = msg_temp
         self.status_code = status_code
         self.msg = ''
 
     def set_msg(self, msg):
-        self.msg = self.msg1 + ': ' + str(msg)
+        self.msg = self.msg_temp + ': ' + str(msg)
         return self
 
 
