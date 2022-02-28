@@ -1,7 +1,8 @@
 from flask import current_app
 
-from app.utils import err_resp, ok_message, err_500_resp
+# from app.utils import err_resp, ok_message, err_500_resp
 from app.models.user import User
+from libs import resp
 
 
 class UserService:
@@ -9,17 +10,14 @@ class UserService:
     def get_user_data(username):
         """ Get user data by username """
         if not (user := User.query.filter_by(username=username).first()):
-            return err_resp(code=404, messages="User not found!", reason="user_404", status_code=404)
+            return resp.fail(resp.InvalidRequest.set_msg('没有找到用户'))
 
         from .utils import load_data
 
         try:
             user_data = load_data(user)
-
-            resp = ok_message()
-            resp["data"] = user_data
-            return resp, 200
+            return resp.ok(data=user_data)
 
         except Exception as error:
             current_app.logger.error(error)
-            return err_500_resp(error)
+            return resp.fail(resp.ServerError)
