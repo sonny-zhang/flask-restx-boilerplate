@@ -6,13 +6,14 @@ from flask_restx._http import HTTPStatus as http_status
 
 
 class Resp(object):
-    def __init__(self, code: int, msg: str, status_code: int):
+    def __init__(self, code: int, msg1: str, status_code: int):
         self.code = code
-        self.msg = msg
+        self.msg1 = msg1
         self.status_code = status_code
+        self.msg = ''
 
     def set_msg(self, msg):
-        self.msg = self.msg + ': ' + str(msg)
+        self.msg = self.msg1 + ': ' + str(msg)
         return self
 
 
@@ -30,11 +31,11 @@ ServerError: Resp = Resp(5000, "服务器繁忙", http_status.INTERNAL_SERVER_ER
 def ok(*, data: Union[list, dict, str] = None, pagination: dict = None, msg: str = "success"):
     status_code = http_status.OK
     obj = {
-            'code': 200,
-            'msg': msg,
-            'data': data,
-            'pagination': pagination
-        }
+        'code': 200,
+        'msg': msg,
+        'data': data,
+        'pagination': pagination
+    }
 
     return obj, status_code
 
@@ -42,7 +43,7 @@ def ok(*, data: Union[list, dict, str] = None, pagination: dict = None, msg: str
 def fail(resp: Resp):
     status_code = resp.status_code
     obj = {
-            'code': resp.code,
-            'msg': resp.msg,
-        }
+        'code': resp.code,
+        'msg': resp.msg,
+    }
     return obj, status_code

@@ -31,7 +31,7 @@ class AuthDto:
         "registration_parameters",
         {
             "email": fields.String(required=True, description=User.email.info),
-            "userName": fields.String(required=True, description=User.username.info),
+            "username": fields.String(required=True, description=User.username.info),
             # Name is optional
             "name": fields.String(description=User.name.info),
             "password": fields.String(required=True, description='密码'),
