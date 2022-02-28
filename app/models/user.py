@@ -93,12 +93,13 @@ class User(Model):
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
+        # 生成一个User对象，自动更新create_time和update_time
         self.create_time = datetime.now()
         self.update_time = datetime.now()
 
     @property
     def password(self):
-        raise AttributeError("Password is not a readable attribute")
+        raise AttributeError("密码是不可读")
 
     @password.setter
     def password(self, password):

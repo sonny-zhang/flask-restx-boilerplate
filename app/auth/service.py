@@ -43,12 +43,12 @@ class AuthService:
     def register(data):
         # Assign vars
 
-        ## Required values
+        ## dto里是必填参数
         email = data["email"]
         username = data["username"]
         password = data["password"]
 
-        ## Optional
+        ## dtoi里是选填参数
         data_name = data.get("name")
 
         # Check if the email is taken
