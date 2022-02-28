@@ -1,7 +1,7 @@
-from flask import request
+from flask import request, current_app
 from flask_restx import Resource
 
-from app.utils import validation_error
+from libs import resp
 
 # Auth modules
 from .service import AuthService
@@ -24,12 +24,11 @@ class AuthLogin(Resource):
     auth_login = AuthDto.auth_login
 
     @api.doc(
-        "认证登录",
         responses={
-            200: ("登录成功", auth_success),
-            400: "请求参数，验证失败",
-            403: "密码不正确或凭据不完整",
-            404: "根据邮箱没有找到用户",
+            200: ("请求成功", auth_success),
+            400: "请求失败",
+            403: resp.PermissionDenied.msg,
+            500: resp.ServerError.msg,
         },
     )
     @api.expect(auth_login, validate=True)
@@ -39,8 +38,9 @@ class AuthLogin(Resource):
         login_data = request.get_json()
 
         # Validate data
-        if (errors := login_schema.validate(login_data)) :
-            return validation_error(400, errors), 400
+        if (errors := login_schema.validate(login_data)):
+            current_app.logger.info(errors)
+            return resp.fail(resp.InvalidParams.set_msg(msg=errors))
 
         return AuthService.login(login_data)
 
@@ -54,10 +54,9 @@ class AuthRegister(Resource):
     auth_register = AuthDto.auth_register
 
     @api.doc(
-        "Auth registration",
         responses={
-            200: ("用户注册成功", auth_success),
-            400: "数据验证失败",
+            200: ("请求成功", auth_success),
+            400: "请求失败",
         },
     )
     @api.expect(auth_register, validate=True)
@@ -67,7 +66,8 @@ class AuthRegister(Resource):
         register_data = request.get_json()
 
         # Validate data
-        if (errors := register_schema.validate(register_data)) :
-            return validation_error(400, errors), 400
+        if (errors := register_schema.validate(register_data)):
+            current_app.logger.info(errors)
+            return resp.fail(resp.InvalidParams.set_msg(msg=errors))
 
         return AuthService.register(register_data)

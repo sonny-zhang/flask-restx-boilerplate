@@ -13,25 +13,25 @@ class AuthDto:
             "name": fields.String(description=User.name.info),
             "username": fields.String(description=User.username.info),
             "role_id": fields.Integer(description=User.role_id.info),
-            "create_time": fields.DateTime(description=User.create_time.info),
-            "update_time": fields.DateTime(description=User.update_time.info),
-            "access_token": fields.String,
+            "create_time": fields.DateTime(description=User.create_time.info, format='%Y-%m-%d %H:%M:%S'),
+            "update_time": fields.DateTime(description=User.update_time.info, format='%Y-%m-%d %H:%M:%S'),
+            "Authorization": fields.String,
         },
     )
 
     auth_login = api.model(
-        "登录请求参数",
+        "login_parameters",
         {
-            "email": fields.String(required=True),
-            "password": fields.String(required=True),
+            "email": fields.String(required=True, description=User.email.info),
+            "password": fields.String(required=True, description='密码'),
         },
     )
 
     auth_register = api.model(
-        "注册请求参数",
+        "registration_parameters",
         {
             "email": fields.String(required=True, description=User.email.info),
-            "username": fields.String(required=True, description=User.username.info),
+            "userName": fields.String(required=True, description=User.username.info),
             # Name is optional
             "name": fields.String(description=User.name.info),
             "password": fields.String(required=True, description='密码'),
@@ -39,10 +39,10 @@ class AuthDto:
     )
 
     auth_success = api.model(
-        "成功认证返回数据",
+        "Response",
         {
-            "code": fields.Integer(example=200, description='状态码'),
-            "message": fields.String,
+            "code": fields.Integer(example=200),
+            "message": fields.String(example='success'),
             "data": fields.Nested(user_obj)
         },
     )

@@ -93,6 +93,8 @@ class User(Model):
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
+        self.create_time = datetime.now()
+        self.update_time = datetime.now()
 
     @property
     def password(self):

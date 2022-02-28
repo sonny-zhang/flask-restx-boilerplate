@@ -1,6 +1,5 @@
 from typing import Any
 
-
 def ok_message():
     response_object = {"code": 200, "messages": '操作成功'}
     return response_object

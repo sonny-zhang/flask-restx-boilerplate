@@ -115,11 +115,20 @@ $ flask test
 $ flask test tests.test_auth_api tests.test_user_model ...
 ```
 
+## Swagger
+- 自带的css文件里有个`td:first-of-type`的`padding`值改从`10px`为`25px`；Code与Description才能对齐
+
 ## 将数据库表结构转成model.py文件
 ```mysql
 -- 每张表都应该有这两个时间，代码就不用处理了
 `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP comment '创建时间',
 `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '更新时间',
+```
+
+把数据库转成model.py文件
+```mysql
 
 flask-sqlacodegen 'sqlite:///data-dev.sqlite' --tables user --outfile "app/models/user2.py"  --flask
+flask-sqlacodegen 'mysql+pymysql://root:12345678@localhost/jinchu_order_menu' --tables product_order --outfile "common/models/product/tt.py"  --flask
+
 ```

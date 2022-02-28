@@ -6,6 +6,7 @@ from app import db
 from app.utils import ok_message, err_resp, err_500_resp
 from app.models.user import User
 from app.models.schemas import UserSchema
+from libs import resp
 
 user_schema = UserSchema()
 
@@ -20,34 +21,23 @@ class AuthService:
         try:
             # Fetch user data
             if not (user := User.query.filter_by(email=email).first()):
-                return err_resp(
-                    code=404,
-                    messages="您输入的电子邮件与任何帐户不匹配。",
-                    reason="email_404",
-                    status_code=404,
-                )
+                return resp.fail(resp.DataNotFound.set_msg(msg='输入的邮箱与任何帐户不匹配'))
+            # 密码错误
+            elif user and not user.verify_password(password):
+                return resp.fail(resp.InvalidRequest.set_msg(msg='密码错误'))
 
-            elif user and user.verify_password(password):
-                user_info = user_schema.dump(user)
+            user_info = user_schema.dump(user)
+            access_token = create_access_token(identity=user.id)
 
-                access_token = create_access_token(identity=user.id)
-
-                resp = ok_message()
-                resp['data']['access_token'] = access_token
-                resp['data']['user'] = user_info
-
-                return resp, 200
-
-            return err_resp(
-                code=401,
-                messages="登录失败，可能是密码错误。",
-                reason="password_invalid",
-                status_code=401
-            )
+            data = {
+                'Authorization': access_token,
+                'userItem': user_info
+            }
+            return resp.ok(data=data)
 
         except Exception as error:
             current_app.logger.error(error)
-            return err_500_resp(error)
+            return resp.fail(resp.ServerError.set_msg(error))
 
     @staticmethod
     def register(data):
@@ -63,12 +53,13 @@ class AuthService:
 
         # Check if the email is taken
         if User.query.filter_by(email=email).first() is not None:
-            return err_resp(code=403, messages="邮箱已经被使用", reason="email_taken", status_code=403)
+            # return err_resp(code=403, messages="邮箱已经被使用", reason="email_taken", status_code=403)
+            return resp.fail(resp.InvalidRequest.set_msg(f'邮箱{email}已经被使用'))
 
         # Check if the username is taken
         if User.query.filter_by(username=username).first() is not None:
-            return err_resp(code=403, messages="用户名称已经被使用", reason="username_taken", status_code=403)
-
+            # return err_resp(code=403, messages="用户名称已经被使用", reason="username_taken", status_code=403)
+            return resp.fail(resp.InvalidRequest.set_msg(f'用户名{username}已经被使用'))
         try:
             new_user = User(
                 email=email,
@@ -89,12 +80,12 @@ class AuthService:
             # Create an access token
             access_token = create_access_token(identity=new_user.id)
 
-            resp = ok_message()
-            resp['data']["access_token"] = access_token
-            resp['data']["user"] = user_info
-
-            return resp, 201
+            data = {
+                'Authorization': access_token,
+                'userItem': user_info
+            }
+            return resp.ok(data=data)
 
         except Exception as error:
             current_app.logger.error(error)
-            return err_500_resp(error)
+            return resp.fail(resp.ServerError.set_msg(error))
