@@ -1,14 +1,12 @@
 from datetime import datetime
 from flask import current_app
+from flask_restx import marshal
 from flask_jwt_extended import create_access_token
 
 from app import db
-from app.utils import ok_message, err_resp, err_500_resp
 from app.models.user import User
-from app.models.schemas import UserSchema
+from app.models.schemas import user_schema
 from libs import resp
-
-user_schema = UserSchema()
 
 
 class AuthService:
@@ -26,7 +24,7 @@ class AuthService:
             elif user and not user.verify_password(password):
                 return resp.fail(resp.InvalidRequest.set_msg(msg='密码错误'))
 
-            user_info = user_schema.dump(user)
+            user_info = marshal(user, user_schema)
             access_token = create_access_token(identity=user.id)
 
             data = {
@@ -72,7 +70,7 @@ class AuthService:
             db.session.flush()
 
             # Load the new user's info
-            user_info = user_schema.dump(new_user)
+            user_info = marshal(new_user, user_schema)
 
             # Commit changes to DB
             db.session.commit()

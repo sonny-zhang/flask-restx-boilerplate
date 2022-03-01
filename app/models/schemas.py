@@ -1,12 +1,17 @@
 # Model Schemas
-from app import ma
+from flask_restx import fields, Model
 
-from .user import User
+from app.models.user import User
 
-
-class UserSchema(ma.Schema):
-    class Meta:
-        # Fields to expose, add more if needed.
-        fields = ("id", "email", "name", "username", "role_id", "create_time", "update_time")
-        ordered = True
-        datetimeformat = '%Y-%m-%d %H:%M:%S'
+user_schema = Model(
+    'user_schema',
+    {
+        "id": fields.String(description=User.id.info),
+        "email": fields.String(description=User.email.info),
+        "name": fields.String(description=User.name.info),
+        "username": fields.String(description=User.username.info),
+        "roleId": fields.Integer(description=User.role_id.info, attribute=User.role_id.name),
+        "createTime": fields.DateTime(description=User.create_time.info, attribute=User.create_time.name),
+        "updateTime": fields.DateTime(description=User.update_time.info, attribute=User.update_time.name),
+    }
+)

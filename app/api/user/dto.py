@@ -13,9 +13,9 @@ class UserDto:
             "email": fields.String(description=User.email.info),
             "name": fields.String(description=User.name.info),
             "username": fields.String(description=User.username.info),
-            "role_id": fields.Integer(description=User.role_id.info),
-            "create_time": fields.DateTime(description=User.create_time.info, format='%Y-%m-%d %H:%M:%S'),
-            "update_time": fields.DateTime(description=User.update_time.info, format='%Y-%m-%d %H:%M:%S'),
+            "roleId": fields.Integer(description=User.role_id.info),
+            "createTime": fields.DateTime(description=User.create_time.info, format='%Y-%m-%d %H:%M:%S'),
+            "updateTime": fields.DateTime(description=User.update_time.info, format='%Y-%m-%d %H:%M:%S'),
         },
     )
 

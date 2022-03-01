@@ -1,22 +1,19 @@
 from flask_restx import Namespace, fields
 
 from app.models.user import User
+from app.models.schemas import user_schema
 
 
 class AuthDto:
     api = Namespace("auth", description="认证和获取token")
+    api.models[user_schema.name] = user_schema
 
     user_obj = api.model(
         "用户对象",
         {
-            "email": fields.String(description=User.email.info),
-            "name": fields.String(description=User.name.info),
-            "username": fields.String(description=User.username.info),
-            "role_id": fields.Integer(description=User.role_id.info),
-            "create_time": fields.DateTime(description=User.create_time.info, format='%Y-%m-%d %H:%M:%S'),
-            "update_time": fields.DateTime(description=User.update_time.info, format='%Y-%m-%d %H:%M:%S'),
-            "Authorization": fields.String,
-        },
+            'Authorization': fields.String,
+            'userItem': fields.Nested(user_schema)
+        }
     )
 
     auth_login = api.model(
@@ -43,6 +40,6 @@ class AuthDto:
         {
             "code": fields.Integer(example=200),
             "message": fields.String(example='success'),
-            "data": fields.Nested(user_obj)
+            "data": fields.Nested(user_obj),
         },
     )
