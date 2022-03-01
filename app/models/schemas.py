@@ -11,7 +11,9 @@ user_schema = Model(
         "name": fields.String(description=User.name.info),
         "username": fields.String(description=User.username.info),
         "roleId": fields.Integer(description=User.role_id.info, attribute=User.role_id.name),
-        "createTime": fields.DateTime(description=User.create_time.info, attribute=User.create_time.name),
-        "updateTime": fields.DateTime(description=User.update_time.info, attribute=User.update_time.name),
+        "createTime": fields.DateTime(description=User.create_time.info, attribute=User.create_time.name,
+                                      example='2022-03-01 15:32:01'),
+        "updateTime": fields.DateTime(description=User.update_time.info, attribute=User.update_time.name,
+                                      example='2022-03-01 15:33:02'),
     }
 )
