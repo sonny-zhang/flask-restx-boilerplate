@@ -3,6 +3,17 @@ from flask_restx import fields, Model
 
 from app.models.user import User
 
+pagination_schema = Model(
+    'pagination_schema',
+    {
+        'current_page': fields.Integer(description='当期页码数'),
+        'pages': fields.Integer(description='总页码数'),
+        'page_size': fields.Integer(description='每页显示的条数'),
+        'total_size': fields.Integer(description='总条数'),
+    }
+
+)
+
 user_schema = Model(
     'user_schema',
     {

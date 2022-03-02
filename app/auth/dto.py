@@ -9,7 +9,7 @@ class AuthDto:
     api.models[user_schema.name] = user_schema
 
     user_obj = api.model(
-        "用户对象",
+        "user_obj",
         {
             'Authorization': fields.String,
             'userItem': fields.Nested(user_schema)
